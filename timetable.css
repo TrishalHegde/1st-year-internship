@@ -1,0 +1,128 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+    padding: 20px;
+}
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+}
+input, select {
+    padding: 8px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 5px;
+}
+button:hover {
+    background-color: #0056b3;
+}
+table {
+    width: 100%;
+    margin-top: 10px;
+    border-collapse: collapse;
+}
+th, td {
+    border: 1px solid #ccc;
+    padding: 10px;
+}
+th {
+    background-color: #007bff;
+    color: white;
+}
+.edit-dropdown {
+    padding: 5px;
+}
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
+background-color: #f4f4f4;
+}
+
+/* Title Bar */
+header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+background: #2c3e50;
+color: white;
+padding: 15px 30px;
+}
+
+.logo {
+display: flex;
+align-items: center;
+}
+
+.logo img {
+width: 50px;
+margin-right: 10px;
+}
+
+.menu-btn {
+background: none;
+border: none;
+color: white;
+font-size: 24px;
+cursor: pointer;
+}
+
+/* Sidebar Menu */
+.sidebar {
+height: 100%;
+width: 0;
+position: fixed;
+top: 0;
+left: 0;
+background: #34495e;
+overflow-x: hidden;
+transition: 0.5s;
+padding-top: 60px;
+}
+
+.sidebar ul {
+list-style: none;
+padding: 0;
+}
+
+.sidebar ul li {
+padding: 15px;
+text-align: center;
+}
+
+.sidebar ul li a {
+text-decoration: none;
+color: white;
+font-size: 20px;
+display: block;
+}
+
+.sidebar ul li a:hover {
+background: #f39c12;
+}
+
+.close-btn {
+position: absolute;
+top: 10px;
+right: 15px;
+font-size: 24px;
+background: none;
+border: none;
+color: white;
+cursor: pointer;
+}
+
+

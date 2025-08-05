@@ -1,0 +1,146 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+h2 {
+    color: #333;
+}
+form {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    display: inline-block;
+    margin-bottom: 20px;
+}
+input {
+    padding: 8px;
+    margin: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+button {
+    padding: 10px;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+button:hover {
+    background-color: #218838;
+}
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+}
+th, td {
+    border: 1px solid black;
+    padding: 10px;
+    text-align: center;
+}
+th {
+    background-color: #28a745;
+    color: white;
+}
+canvas {
+    max-width: 600px;
+    margin: 20px auto;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+a {
+    display: block;
+    margin-top: 20px;
+    font-weight: bold;
+    color: #007BFF;
+    text-decoration: none;
+}
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
+background-color: #f4f4f4;
+}
+
+/* Title Bar */
+header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+background: #2c3e50;
+color: white;
+padding: 15px 30px;
+}
+
+.logo {
+display: flex;
+align-items: center;
+}
+
+.logo img {
+width: 50px;
+margin-right: 10px;
+}
+
+.menu-btn {
+background: none;
+border: none;
+color: white;
+font-size: 24px;
+cursor: pointer;
+}
+
+/* Sidebar Menu */
+.sidebar {
+height: 100%;
+width: 0;
+position: fixed;
+top: 0;
+left: 0;
+background: #34495e;
+overflow-x: hidden;
+transition: 0.5s;
+padding-top: 60px;
+}
+
+.sidebar ul {
+list-style: none;
+padding: 0;
+}
+
+.sidebar ul li {
+padding: 15px;
+text-align: center;
+}
+
+.sidebar ul li a {
+text-decoration: none;
+color: white;
+font-size: 20px;
+display: block;
+}
+
+.sidebar ul li a:hover {
+background: #f39c12;
+}
+
+.close-btn {
+position: absolute;
+top: 10px;
+right: 15px;
+font-size: 24px;
+background: none;
+border: none;
+color: white;
+cursor: pointer;
+}

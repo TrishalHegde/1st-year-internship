@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timetable Generator</title>
+    <link rel="stylesheet" href="timetable.css">
+</head>
+<body>
+     <!-- Title Bar -->
+     <header>
+        <div class="logo">
+           <img src="6e481335-3251-4fbc-8512-5e79a004acd3.jpg">
+        </div>
+        <button class="menu-btn" onclick="openMenu()">☰</button>
+    </header>
+
+    <!-- Sidebar Menu -->
+    <div id="sidebar" class="sidebar">
+        <button class="close-btn" onclick="closeMenu()">❌</button>
+        <ul>
+            <li><a href="student_tracker.html">Student Tracker</a></li>
+            <li><a href="timetable.html">Timetable</a></li>
+            <li><a href="Reminder.html">Reminder</a></li>
+            <li><a href="Quiz.html">Quiz Bot</a></li>
+            <li><a href="resourse.html">Resource Bot</a></li>
+        </ul>
+    </div>
+    <h2>Timetable Generator</h2>
+    <div class="container">
+        <label for="startTime">Start Time (HH:MM AM/PM):</label>
+        <input type="text" id="startTime" placeholder="e.g. 5:00 PM">
+        <br>
+        <label for="studyHours">Total Study Hours:</label>
+        <input type="number" id="studyHours" min="4" placeholder="Min 4 hours">
+        <br>
+        <button onclick="generateTimetable()">Generate Timetable</button>
+        <button onclick="clearTimetable()">Clear Timetable</button>
+       
+
+        <h3>Generated Timetable</h3>
+        <table id="timetableTable">
+            <thead>
+                <tr>
+                    <th>Subject</th>
+                    <th>Start Time</th>
+                    <th>End Time</th>
+                    <th>Category</th>
+                    <th>Edit</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+<script src="timetable.js"></script>
+        
+
+</body>
+</html>

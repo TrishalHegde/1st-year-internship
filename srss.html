@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Reminders</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+      max-width: 800px;
+      margin: auto;
+    }
+    h2 {
+      margin-bottom: 20px;
+    }
+    .reminder {
+      padding: 15px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin: 10px 0;
+      background: #f9f9f9;
+    }
+    .toggle-btn {
+      padding: 8px 12px;
+      border: none;
+      background-color: #28a745;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .toggle-btn.completed {
+      background-color: #6c757d;
+      cursor: default;
+    }
+    .report {
+      text-align: left;
+      margin-top: 30px;
+    }
+    .quiz-btn {
+      background-color: #ffc107;
+      margin-left: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Study Reminders</h2>
+    <div id="reminderList"></div>
+
+    <div class="report">
+      <h3>Daily Report</h3>
+      <ul id="dailyReport"></ul>
+
+      <h3>Weekly Report</h3>
+      <ul id="weeklyReport"></ul>
+    </div>
+  </div>
+
+  <!-- Loud and looping alert sound -->
+  <audio id="alertSound" loop preload="auto">
+    <source src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg" type="audio/ogg">
+    Your browser does not support the audio element.
+  </audio>
+
+  <script>
+    function convertTo24Hour(timeStr) {
+      let parts = timeStr.trim().split(/[: ]/);
+      let hour = parseInt(parts[0]);
+      let minute = parseInt(parts[1]);
+      let ampm = parts[2].toLowerCase();
+
+      if (ampm === "pm" && hour !== 12) hour += 12;
+      if (ampm === "am" && hour === 12) hour = 0;
+
+      return `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+    }
+
+    function getTodayKey() {
+      const today = new Date();
+      return today.toISOString().split("T")[0]; // YYYY-MM-DD
+    }
+
+    function toggleComplete(key) {
+      let completedToday = JSON.parse(localStorage.getItem("completed_today")) || [];
+      if (!completedToday.includes(key)) {
+        completedToday.push(key);
+      }
+      localStorage.setItem("completed_today", JSON.stringify(completedToday));
+
+      let weekly = JSON.parse(localStorage.getItem("weekly_report")) || {};
+      let today = getTodayKey();
+      if (!weekly[today]) weekly[today] = [];
+      if (!weekly[today].includes(key.split("_")[1])) {
+        weekly[today].push(key.split("_")[1]);
+      }
+      localStorage.setItem("weekly_report", JSON.stringify(weekly));
+
+      // Stop the alarm for this session
+      let activeAlarms = JSON.parse(localStorage.getItem("active_alarms")) || [];
+      const index = activeAlarms.indexOf(key);
+      if (index !== -1) {
+        activeAlarms.splice(index, 1);
+        localStorage.setItem("active_alarms", JSON.stringify(activeAlarms));
+      }
+
+      checkAlarmStop();
+    }
+
+    function notifyUser(subject) {
+      if (Notification.permission === "granted") {
+        new Notification("Session Completed!", {
+          body: `Time to mark "${subject}" as completed.`,
+          icon: "https://cdn-icons-png.flaticon.com/512/190/190411.png"
+        });
+      }
+    }
+
+    function playSoundLoop(key) {
+      const sound = document.getElementById("alertSound");
+      let activeAlarms = JSON.parse(localStorage.getItem("active_alarms")) || [];
+      if (!activeAlarms.includes(key)) {
+        activeAlarms.push(key);
+        localStorage.setItem("active_alarms", JSON.stringify(activeAlarms));
+        sound.play().catch(err => console.log("Sound play failed:", err));
+      }
+    }
+
+    function checkAlarmStop() {
+      const sound = document.getElementById("alertSound");
+      const activeAlarms = JSON.parse(localStorage.getItem("active_alarms")) || [];
+      if (activeAlarms.length === 0) {
+        sound.pause();
+        sound.currentTime = 0;
+      }
+    }
+
+    function updateReminders() {
+      const reminderList = document.getElementById("reminderList");
+      reminderList.innerHTML = "";
+
+      const timetable = JSON.parse(localStorage.getItem("timetable")) || [];
+      const completedToday = JSON.parse(localStorage.getItem("completed_today")) || [];
+      const notified = JSON.parse(localStorage.getItem("notified")) || [];
+
+      const now = new Date();
+      const currentTime = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+
+      timetable.forEach((session, index) => {
+        const endTime24 = convertTo24Hour(session.end);
+        const sessionKey = `${getTodayKey()}_${session.subject}`;
+        const isCompleted = completedToday.includes(sessionKey);
+
+        if (currentTime >= endTime24) {
+          if (!notified.includes(sessionKey)) {
+            notifyUser(session.subject);
+            notified.push(sessionKey);
+            localStorage.setItem("notified", JSON.stringify(notified));
+          }
+
+          if (!isCompleted) {
+            playSoundLoop(sessionKey);
+          }
+
+          const sessionDiv = document.createElement("div");
+          sessionDiv.className = "reminder";
+
+          sessionDiv.innerHTML = `
+            <strong>${session.subject}</strong><br>
+            ${session.start} - ${session.end} (${session.category})
+          `;
+
+          const btn = document.createElement("button");
+          btn.className = `toggle-btn ${isCompleted ? "completed" : ""}`;
+          btn.textContent = isCompleted ? "Completed" : "Mark as Completed";
+          btn.onclick = () => {
+            if (!isCompleted) {
+              toggleComplete(sessionKey);
+              updateReminders();
+              updateReports();
+            }
+          };
+          sessionDiv.appendChild(btn);
+
+          if (isCompleted) {
+            const quizBtn = document.createElement("button");
+            quizBtn.className = "toggle-btn quiz-btn";
+            quizBtn.textContent = "Take Quiz";
+            quizBtn.onclick = () => {
+              localStorage.setItem("current_quiz_subject", session.subject);
+              window.location.href = "Quiz.html";
+            };
+            sessionDiv.appendChild(quizBtn);
+          }
+
+          reminderList.appendChild(sessionDiv);
+        }
+      });
+
+      checkAlarmStop(); // Pause sound if no alarms are active
+    }
+
+    function updateReports() {
+      const daily = JSON.parse(localStorage.getItem("completed_today")) || [];
+      const dailyReport = document.getElementById("dailyReport");
+      dailyReport.innerHTML = "";
+
+      daily.forEach(entry => {
+        const subject = entry.split("_")[1];
+        const li = document.createElement("li");
+        li.textContent = subject;
+        dailyReport.appendChild(li);
+      });
+
+      const weekly = JSON.parse(localStorage.getItem("weekly_report")) || {};
+      const weeklyReport = document.getElementById("weeklyReport");
+      weeklyReport.innerHTML = "";
+
+      for (let date in weekly) {
+        const li = document.createElement("li");
+        li.textContent = `${date}: ${weekly[date].join(", ")}`;
+        weeklyReport.appendChild(li);
+      }
+    }
+
+    setInterval(updateReminders, 60000); // check every 60 sec
+
+    window.onload = () => {
+      if (Notification.permission !== "granted") {
+        Notification.requestPermission();
+      }
+      updateReminders();
+      updateReports();
+    };
+  </script>
+</body>
+</html>
